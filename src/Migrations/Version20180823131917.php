@@ -23,6 +23,6 @@ final class Version20180823131917 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE user CHANGE full_name fullname VARCHAR(50) NOT NULL COLLATE utf8mb4_unicode_ci');
+        $this->addSql('ALTER TABLE user CHANGE fullname fullname VARCHAR(50) NOT NULL COLLATE utf8mb4_unicode_ci');
     }
 }
