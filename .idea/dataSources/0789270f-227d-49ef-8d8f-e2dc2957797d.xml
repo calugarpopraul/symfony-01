@@ -924,40 +924,97 @@
     <table id="232" parent="6" name="migration_versions">
       <Collation>utf8_unicode_ci</Collation>
     </table>
-    <column id="233" parent="231" name="id">
+    <table id="233" parent="6" name="user">
+      <Collation>utf8mb4_unicode_ci</Collation>
+    </table>
+    <column id="234" parent="231" name="id">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="234" parent="231" name="text">
+    <column id="235" parent="231" name="text">
       <Position>2</Position>
       <DataType>varchar(280)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="235" parent="231" name="time">
+    <column id="236" parent="231" name="time">
       <Position>3</Position>
       <DataType>datetime|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <key id="236" parent="231" name="PRIMARY">
+    <key id="237" parent="231" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="237" parent="232" name="version">
+    <column id="238" parent="232" name="version">
       <Position>1</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <key id="238" parent="232" name="PRIMARY">
+    <key id="239" parent="232" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>version</ColNames>
       <Primary>1</Primary>
+    </key>
+    <column id="240" parent="233" name="id">
+      <Position>1</Position>
+      <DataType>int(11)|0s</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="241" parent="233" name="username">
+      <Position>2</Position>
+      <DataType>varchar(50)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="242" parent="233" name="password">
+      <Position>3</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="243" parent="233" name="email">
+      <Position>4</Position>
+      <DataType>varchar(254)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="244" parent="233" name="fullname">
+      <Position>5</Position>
+      <DataType>varchar(50)|0s</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <index id="245" parent="233" name="UNIQ_8D93D649F85E0677">
+      <ColNames>username</ColNames>
+      <Unique>1</Unique>
+      <Type>btree</Type>
+    </index>
+    <index id="246" parent="233" name="UNIQ_8D93D649E7927C74">
+      <ColNames>email</ColNames>
+      <Unique>1</Unique>
+      <Type>btree</Type>
+    </index>
+    <key id="247" parent="233" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <key id="248" parent="233" name="UNIQ_8D93D649F85E0677">
+      <ColNames>username</ColNames>
+      <UnderlyingIndexName>UNIQ_8D93D649F85E0677</UnderlyingIndexName>
+    </key>
+    <key id="249" parent="233" name="UNIQ_8D93D649E7927C74">
+      <ColNames>email</ColNames>
+      <UnderlyingIndexName>UNIQ_8D93D649E7927C74</UnderlyingIndexName>
     </key>
   </database-model>
 </dataSource>

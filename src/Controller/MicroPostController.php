@@ -20,7 +20,11 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 
-
+/**
+ * Class MicroPostController
+ * @package App\Controller
+ * @Route("/micro-post")
+ */
 class MicroPostController extends AbstractController
 {
     /**
