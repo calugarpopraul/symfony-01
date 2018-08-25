@@ -31,6 +31,7 @@ class RegisterController extends Controller
                 $user,
                 $user->getPlainPassword());
             $user->setPassword($password);
+            $user->setRoles(['ROLE_USER']);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);

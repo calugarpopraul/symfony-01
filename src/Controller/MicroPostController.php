@@ -9,24 +9,31 @@
 namespace App\Controller;
 
 use App\Entity\MicroPost;
+use App\Entity\User;
 use App\Form\MicroPostType;
 use App\Repository\MicroPostRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Class MicroPostController
  * @package App\Controller
  * @Route("/micro-post")
  */
-class MicroPostController extends AbstractController
+class MicroPostController extends Controller
 {
+
+
     /**
      * @var \Twig_Environment
      */
@@ -51,10 +58,15 @@ class MicroPostController extends AbstractController
      * @var FlashBagInterface
      */
     private $flashBag;
+    /**
+     * @var AuthorizationCheckerInterface
+     */
+    private $authorizationChecker;
 
     public function __construct(\Twig_Environment $twig, MicroPostRepository $microPostRepository,
                                 FormFactoryInterface $formFactory, EntityManagerInterface $entityManager,
-                                RouterInterface $router, FlashBagInterface $flashBag)
+                                RouterInterface $router, FlashBagInterface $flashBag,
+                                AuthorizationCheckerInterface $authorizationChecker)
     {
 
         $this->twig = $twig;
@@ -63,6 +75,7 @@ class MicroPostController extends AbstractController
         $this->entityManager = $entityManager;
         $this->router = $router;
         $this->flashBag = $flashBag;
+        $this->authorizationChecker = $authorizationChecker;
     }
 
     /**
@@ -80,14 +93,24 @@ class MicroPostController extends AbstractController
      * @param Request $request
      * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response
      * @Route("/edit/{id}", name="micro_post_edit")
+     * @Security("is_granted('edit', microPost)",message="Access denied")
      */
     public function edit(MicroPost $microPost, Request $request)
     {
+        //on base controller class
+        //$this->denyAccessUnlessGranted('edit',$microPost);
+
+//        if($this->authorizationChecker->isGranted('edit',$microPost)){
+//            throw new UnauthorizedHttpException();
+//        }
+
         $form = $this->formFactory->create(MicroPostType::class, $microPost);
         $form->handleRequest($request);
+        dump($microPost);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->persist($microPost);
+            dump($microPost);
             $this->entityManager->flush();
 
             return new RedirectResponse(
@@ -116,6 +139,7 @@ class MicroPostController extends AbstractController
 
     /**
      * @Route("/delete/{id}", name="micro_post_delete")
+     * @Security("is_granted('delete', microPost)",message="Access denied")
      */
     public function delete(MicroPost $microPost)
     {
@@ -131,12 +155,17 @@ class MicroPostController extends AbstractController
 
     /**
      * @Route("/add", name="micro_post_add")
+     * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @Security("is_granted('ROLE_USER')")
      */
-    public function add(Request $request)
+    public function add(Request $request, TokenStorageInterface $tokenStorage)
     {
+        $user = $tokenStorage->getToken()->getUser();
+        dump($user);
 
         $microPost = new MicroPost();
         $microPost->setTime(new \DateTime());
+        $microPost->setUser($user);
 
         $form = $this->formFactory->create(MicroPostType::class, $microPost);
         $form->handleRequest($request);
@@ -144,6 +173,7 @@ class MicroPostController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->persist($microPost);
             $this->entityManager->flush();
+            dump($microPost);
 
             return new RedirectResponse(
                 $this->router->generate('micro_post_index')
