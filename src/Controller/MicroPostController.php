@@ -125,19 +125,6 @@ class MicroPostController extends Controller
 
 
     /**
-     * @Route("/view/{id}", name="micro_post_post")
-     */
-    public function post(MicroPost $post)
-    {
-        //$post = $this->microPostRepository->find($id);
-
-        return $this->render('micro-post/post.html.twig',
-            [
-                'post' => $post
-            ]);
-    }
-
-    /**
      * @Route("/delete/{id}", name="micro_post_delete")
      * @Security("is_granted('delete', microPost)",message="Access denied")
      */
@@ -164,7 +151,7 @@ class MicroPostController extends Controller
         dump($user);
 
         $microPost = new MicroPost();
-        $microPost->setTime(new \DateTime());
+        //$microPost->setTime(new \DateTime());
         $microPost->setUser($user);
 
         $form = $this->formFactory->create(MicroPostType::class, $microPost);
@@ -185,5 +172,33 @@ class MicroPostController extends Controller
         ]);
     }
 
+    /**
+     * @Route("/user/{username}", name="micro_post_user")
+     */
+    public function userPosts(User $userWithPosts)
+    {
+        return $this->render('micro-post/user-posts.html.twig', [
+            'posts' => $this->microPostRepository->findBy(
+                ['user' => $userWithPosts],
+                ['time' => 'DESC']
+            ),
+            'user' => $userWithPosts
+            //'posts' => $userWithPosts->getPosts()
+        ]);
+    }
+
+
+    /**
+     * @Route("/view/{id}", name="micro_post_post")
+     */
+    public function post(MicroPost $post)
+    {
+        //$post = $this->microPostRepository->find($id);
+
+        return $this->render('micro-post/post.html.twig',
+            [
+                'post' => $post
+            ]);
+    }
 
 }

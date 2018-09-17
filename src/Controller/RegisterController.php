@@ -11,12 +11,25 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class RegisterController extends Controller
 {
+
+    /**
+     * @var RouterInterface
+     */
+    private $router;
+
+    public function __construct(RouterInterface $router)
+    {
+        $this->router = $router;
+    }
+
     /**
      * @Route("/register", name="user_register")
      */
@@ -37,7 +50,9 @@ class RegisterController extends Controller
             $entityManager->persist($user);
             $entityManager->flush();
 
-            $this->redirectToRoute('micro_post_index');
+            return new RedirectResponse(
+                $this->router->generate('micro_post_index')
+            );
 
         }
 
